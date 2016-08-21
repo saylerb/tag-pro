@@ -1,7 +1,7 @@
 {
-  "name": "game-time-starter-kit",
+  "name": "game-time",
   "version": "1.0.0",
-  "description": "A starter kit for Turing School's Game Time project.",
+  "description": "Module 4 project where we create a game using OOP in javascript.",
   "main": "index.js",
   "scripts": {
     "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/turingschool-examples/game-time-starter-kit.git"
+    "url": "https://github.com/saylerb/game-time.git"
   },
-  "author": "Steve Kinney",
+  "author": "Robby Jaeger and Brian Sayler",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/turingschool-examples/game-time-starter-kit/issues"
+    "url": "https://github.com/saylerb/game-time/issues"
   },
-  "homepage": "https://github.com/turingschool-examples/game-time-starter-kit",
+  "homepage": "https://github.com/saylerb/game-time",
   "devDependencies": {
     "babel": "^6.5.2",
     "babel-core": "^6.11.4",
