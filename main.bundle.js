@@ -42,15 +42,32 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(1);
+
+/***/ },
+/* 1 */
 /***/ function(module, exports) {
 
-	'use strict';
+	import { Player } from 'player';
 
-	var sayHello = function sayHello() {
-	  return console.log('Hello');
-	};
+	var canvas = document.getElementById('game');
+	var context = canvas.getContext('2d');
+	context.fillRect(50, 50, 10, 10);
 
-	sayHello();
+	var firstPlayer = new Player({ x: 50, y: 50 }, 10, 'blue');
+	var secondPlayer = new Player({ x: 100, y: 50 }, 10, 'red');
+
+	var players = [firstPlayer, secondPlayer];
+
+	requestAnimationFrame(function gameLoop() {
+	  context.clearRect(0, 0, canvas.width, canvas.height);
+
+	  players.forEach(player => player.checkXCoord().move().draw(context)); // chaining
+
+	  requestAnimationFrame(gameLoop);
+	});
 
 /***/ }
 /******/ ]);
