@@ -9,12 +9,35 @@ describe('Map', function() {
     var map = new Map()
     map.cols = 2
     map.rows = 2
-    map.tsize = 10
-    map.tiles = [78, 81, 78, 78]
+    map.tsize = 10 
+    map.tiles = [ 78, 81,
+                  78, 78 ]
     map.barriers = [81]
 
-    it('should have tiles', function() {
+    it('should have tiles', () => {
       assert.equal(map.tiles.length, 4)
+    })
+
+    it('can convert coordinates to a tile index', () => {
+      let result =  map.convertXYtoTileIndex(5, 5)
+      assert.equal(result, 0, 'conversion to tile index is not correct')
+    })
+
+    it('can convert coordinates to a barrier index', () => {
+      let result =  map.convertXYtoTileIndex(15, 5)
+      assert.equal(result, 1)
+    })  
+
+    it('can retrieve the tile value for specific coordinates', () => {
+      let regular_tile =  map.getTileValueAtXY(5, 5)
+      let barrier_tile =  map.getTileValueAtXY(15, 5)
+      assert.equal(regular_tile, 78)
+      assert.equal(barrier_tile, 81)
+    })
+
+    it('if coordinates indicate a colision with the wall', () => {
+      let result =  map.isWallCollision(11, 0)
+      assert.equal(result, true)
     })
   })
 })
