@@ -33,6 +33,13 @@ class Game {
 }
 
 window.onload = function() {
+  var socket = io.connect(); 
+  var connectionCount = document.getElementById('connection-count')
+
+  socket.on('usersConnected', function (count) {
+    connectionCount.innerText = 'Connected Users: ' + count
+  })
+
   var canvas = document.getElementById('game')
   var context = canvas.getContext('2d')
   var keys = new Keyboard().listenForEvents()

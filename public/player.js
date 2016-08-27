@@ -11,7 +11,7 @@ export default class Player {
 
   loadPlayerImage() {
     var playerImg = new Image()
-    playerImg.src = './lib/assets/tiles.png'
+    playerImg.src = './assets/tiles.png'
     return playerImg
   }
 

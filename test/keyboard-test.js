@@ -1,7 +1,7 @@
 const chai = require('chai')
 const assert = chai.assert
 
-import Keyboard from '../lib/keyboard'
+import Keyboard from '../public/keyboard'
 
 describe('Keyboard', function() {
   context('can respond to events', function() {

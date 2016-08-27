@@ -93,7 +93,6 @@
 
 	      requestAnimationFrame(function gameLoop() {
 
-	        console.log('hello');
 	        self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
 
 	        if (self.keyboard.isKeyPressed()) self.players.forEach(function (player) {
@@ -175,7 +174,7 @@
 	    key: 'loadPlayerImage',
 	    value: function loadPlayerImage() {
 	      var playerImg = new Image();
-	      playerImg.src = './lib/assets/tiles.png';
+	      playerImg.src = './assets/tiles.png';
 	      return playerImg;
 	    }
 	  }, {
@@ -422,7 +421,7 @@
 	    key: 'loadTileImage',
 	    value: function loadTileImage() {
 	      var tilesImg = new Image();
-	      tilesImg.src = './lib/assets/tiles.png';
+	      tilesImg.src = './assets/tiles.png';
 	      return tilesImg;
 	    }
 	  }, {
