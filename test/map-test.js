@@ -1,7 +1,7 @@
 const chai = require('chai')
 const assert = chai.assert
 
-import Map from '../lib/map'
+import Map from '../public/map'
 
 describe('Map', function() {
   context('basic map', function() {

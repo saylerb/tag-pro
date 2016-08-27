@@ -2,9 +2,10 @@
   "name": "game-time",
   "version": "1.0.0",
   "description": "Module 4 project where we create a game using OOP in javascript.",
-  "main": "lib/index.js",
+  "main": "public/index.js",
   "scripts": {
     "server": "nodemon server.js --ignore lib/ --ignore test/",
+    "babel-node": "babel-node --presets=es2015 --ignore lib/ --ignore test/",
     "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "build": "./node_modules/webpack/bin/webpack.js",
     "test": "./node_modules/mocha/bin/mocha --compilers js:babel/register"
@@ -21,10 +22,11 @@
   "homepage": "https://github.com/saylerb/game-time",
   "devDependencies": {
     "babel": "^6.5.2",
+    "babel-cli": "^6.14.0",
     "babel-core": "^6.13.2",
     "babel-loader": "^6.2.5",
     "babel-polyfill": "^6.13.0",
-    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-es2015": "^6.14.0",
     "chai": "^3.2.0",
     "css-loader": "^0.23.1",
     "mocha": "^2.2.5",

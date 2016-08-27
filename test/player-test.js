@@ -1,8 +1,8 @@
 const chai = require('chai')
 const assert = chai.assert
 
-import Player from '../lib/player'
-import Map from '../lib/map'
+import Player from '../public/player'
+import Map from '../public/map'
 
 describe('Player', function() {
   context('player can be created and moved', function() {
