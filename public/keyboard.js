@@ -1,4 +1,5 @@
 export default class Keyboard {
+
   constructor() {
     this.keys = {
       "leftArrow": false,

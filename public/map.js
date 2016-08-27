@@ -33,7 +33,7 @@ export default class Map {
 
   loadTileImage() {
     let tilesImg = new Image();
-    tilesImg.src = './lib/assets/tiles.png';
+    tilesImg.src = './assets/tiles.png';
     return tilesImg;
   };
 

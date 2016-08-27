@@ -73,5 +73,10 @@ describe('Player', function() {
       player.move(keys)
       assert.equal(player.x, 79)
     })
+
+    it('is true', function() {
+      assert.equal(true, true)
+    })
+
   })
 })

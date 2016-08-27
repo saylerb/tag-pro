@@ -19,7 +19,6 @@ class Game {
 
     requestAnimationFrame(function gameLoop() {
 
-      console.log('hello')
       self.context.clearRect(0, 0, self.canvas.width, self.canvas.height)
 
       if (self.keyboard.isKeyPressed())
