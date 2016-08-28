@@ -17,6 +17,9 @@ describe('Player', function() {
 
     var player = new Player({ x: 25, y: 25, color: 'blue', controls: 'arrows' }, map)
 
+    var drag = 0.975
+    var acceleration = 0.1
+
     it('should have specified x and y coordinates', function() {
       assert.equal(player.x, 25)
       assert.equal(player.y, 25)
@@ -29,49 +32,73 @@ describe('Player', function() {
     it('should move left', function(){
       player.x = 25
       player.y = 25
+      player.dx = 0
+      player.dy = 0
       var keys = {leftArrow: true, upArrow: false, rightArrow: false, downArrow: false}
       player.move(keys)
 
-      assert.equal(player.x, 24)
+      var expectedPos = 25 - (acceleration * drag)
+
+      assert.equal(player.x, expectedPos)
     })
 
     it('should move up', function(){
       player.x = 25
       player.y = 25
+      player.dx = 0
+      player.dy = 0
       var keys = {leftArrow: false, upArrow: true, rightArrow: false, downArrow: false}
       player.move(keys)
 
-      assert.equal(player.y, 24)
+      var expectedPos = 25 - (acceleration * drag)
+
+      assert.equal(player.y, expectedPos)
     })
 
     it('should move right', function(){
       player.x = 25
       player.y = 25
+      player.dx = 0
+      player.dy = 0
       var keys = {leftArrow: false, upArrow: false, rightArrow: true, downArrow: false}
       player.move(keys)
 
-      assert.equal(player.x, 26)
+      var expectedPos = 25 + (acceleration * drag)
+
+      assert.equal(player.x, expectedPos)
     })
 
     it('should move down', function(){
       player.x = 25
       player.y = 25
+      player.dx = 0
+      player.dy = 0
       var keys = {leftArrow: false, upArrow: false, rightArrow: false, downArrow: true}
       player.move(keys)
 
-      assert.equal(player.y, 26)
+      var expectedPos = 25 + (acceleration * drag)
+
+      assert.equal(player.y, expectedPos)
     })
 
     it('does not move right if it collides with barrier on right side', function(){
       player.x = 78
       player.y = 25
+      player.dx = 0
+      player.dy = 0
       var keys = {leftArrow: false, upArrow: false, rightArrow: true, downArrow: false}
 
-      player.move(keys)
-      assert.equal(player.x, 79)
+      var expectedPos = 78 + (acceleration * drag)
 
       player.move(keys)
-      assert.equal(player.x, 79)
+      assert.equal(player.x, expectedPos)
+      player.dx = 0
+      player.dy = 0
+
+      var expectedPos = player.x + (acceleration * drag)
+
+      player.move(keys)
+      assert.equal(player.x, expectedPos)
     })
   })
 })
