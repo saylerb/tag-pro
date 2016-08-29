@@ -6,13 +6,21 @@
   <link href="lib/style.css" rel="stylesheet">
 </head>
 <body>
-<span id="score-board" ></span>
   <canvas id="game"
           class="game-canvas"
           width="960px"
-          height="640px"></canvas>
+          height="640px">
+  </canvas>
+
+  <div id="score-board-container">
+    <div class="score-container">
+      <span class="score" id="blue-score"></span>
+    </div>
+    <div class="score-container">
+      <span class="score" id="red-score"></span>
+    </div>
+  </div>
 
   <script src="main.bundle.js"></script>
-
 </body>
 </html>
