@@ -1,5 +1,33 @@
 .game-canvas {
-  border: 1px dashed;
   margin: auto;
   display: block;
+  padding: 10px;
+}
+
+#score-board-container {
+  width: 200px;
+  height: 100px;
+  border: 2px solid black;
+  border-radius: 10px;
+  margin: auto;
+  display: flex;
+}
+
+.score-container {
+  width: 100px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.score {
+  font-weight: bold;
+  font-size: 5em;
+}
+
+#blue-score {
+  color: blue;
+}
+
+#red-score {
+  color: red;
 }
