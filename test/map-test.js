@@ -6,13 +6,13 @@ import Map from '../lib/map'
 describe('Map', function() {
   context('basic map', function() {
 
-    var map = new Map()
-    map.cols = 2
-    map.rows = 2
-    map.tsize = 10 
-    map.tiles = [ 78, 81,
-                  78, 78 ]
-    map.barriers = [81]
+    var map = new Map({ tsize: 10,
+                        columns: 2,
+                        rows: 2,
+                        tiles: [ 78, 81,
+                                 78, 78 ],
+                        barriers: [81]
+                      })
 
     it('should have tiles', () => {
       assert.equal(map.tiles.length, 4)

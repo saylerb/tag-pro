@@ -7,18 +7,24 @@ import Map from '../lib/map'
 describe('Player', function() {
   context('player can be created and moved', function() {
 
-    var map = new Map()
-    map.cols = 2
-    map.rows = 2
-    map.tsize = 100
-    map.tiles = [1, 2,
-                 1, 1]
-    map.barriers = [2]
+    // not passing flag or player options to map (using defaults)
 
-    var player = new Player({ x: 25, y: 25, color: 'blue', controls: 'arrows' }, map)
+    var map = new Map({ tsize: 10,
+                        columns: 2,
+                        rows: 2,
+                        tiles: [ 78, 81,
+                                 78, 78 ],
+                        barriers: [2]
+                      })
 
-    var drag = 0.975
-    var acceleration = 0.1
+    const drag = 0.975
+    const acceleration = 0.1
+
+    var player
+
+    beforeEach(function(){
+      player = new Player({ x: 25, y: 25, color: 'blue', controls: 'arrows' }, map)
+    })
 
     it('should have specified x and y coordinates', function() {
       assert.equal(player.x, 25)
@@ -30,10 +36,6 @@ describe('Player', function() {
     })
 
     it('should move left', function(){
-      player.x = 25
-      player.y = 25
-      player.dx = 0
-      player.dy = 0
       var keys = {leftArrow: true, upArrow: false, rightArrow: false, downArrow: false}
       player.move(keys)
 
@@ -43,10 +45,6 @@ describe('Player', function() {
     })
 
     it('should move up', function(){
-      player.x = 25
-      player.y = 25
-      player.dx = 0
-      player.dy = 0
       var keys = {leftArrow: false, upArrow: true, rightArrow: false, downArrow: false}
       player.move(keys)
 
@@ -56,10 +54,6 @@ describe('Player', function() {
     })
 
     it('should move right', function(){
-      player.x = 25
-      player.y = 25
-      player.dx = 0
-      player.dy = 0
       var keys = {leftArrow: false, upArrow: false, rightArrow: true, downArrow: false}
       player.move(keys)
 
@@ -69,10 +63,6 @@ describe('Player', function() {
     })
 
     it('should move down', function(){
-      player.x = 25
-      player.y = 25
-      player.dx = 0
-      player.dy = 0
       var keys = {leftArrow: false, upArrow: false, rightArrow: false, downArrow: true}
       player.move(keys)
 
@@ -82,13 +72,9 @@ describe('Player', function() {
     })
 
     it('does not move right if it collides with barrier on right side', function(){
-      player.x = 78
-      player.y = 25
-      player.dx = 0
-      player.dy = 0
       var keys = {leftArrow: false, upArrow: false, rightArrow: true, downArrow: false}
 
-      var expectedPos = 78 + (acceleration * drag)
+      var expectedPos = 25 + (acceleration * drag)
 
       player.move(keys)
       assert.equal(player.x, expectedPos)
