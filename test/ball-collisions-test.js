@@ -6,7 +6,7 @@ import Player from '../lib/player'
 import Flag from '../lib/flag'
 
 describe('BallCollisions', function() {
-  context('can produce unqiue pairs of players', function() {
+  context('can produce unique pairs of players', function() {
     var players = ["a", "b", "c"]
     var flags = []
     var ballCollisions = new BallCollisions(players, flags)
