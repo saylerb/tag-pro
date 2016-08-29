@@ -7,7 +7,7 @@ import Flag from '../lib/flag'
 import Map from '../lib/map'
 
 describe('FlagCollisions', function() {
-  context('is setup correctly', function() {
+  describe('is setup correctly', function() {
 
     var blueprint = { tsize: 10, columns: 2, rows: 2, 
                       tiles: [ 78, 81, 78, 78 ], barriers: [81]
@@ -47,5 +47,6 @@ describe('FlagCollisions', function() {
       assert.equal(redPlayers.length, 1)
       assert.equal(redPlayers[0].x, 135)
     })
+
   })
 })
