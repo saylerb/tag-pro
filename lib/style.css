@@ -1,3 +1,10 @@
+body {
+ background-image: url("http://wallpapercave.com/wp/NcdPGXX.jpg");
+ background-repeat: no-repeat;
+ background-size: cover;
+}
+
+
 .game-canvas {
   margin: auto;
   display: none;
@@ -12,6 +19,7 @@
   margin: auto;
   display: flex;
   visibility: hidden;
+  background-color: white;
 }
 
 .start-menu {
@@ -20,7 +28,6 @@
  width: 50%;
  overflow: hidden;
  position: relative;
- max-width: 500px;
 }
 
 
