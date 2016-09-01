@@ -8,10 +8,11 @@
 <body>
   
   <div class="start-menu">
-    <img src="lib/assets/menu.png"></img>
-    <button id="test" class="start-button">CLICK TO START TEST GAME</button>
-    <button id="level_one" class="start-button">CLICK TO START LEVEL 1 GAME</button>
+    <img class="menu-items" src="lib/assets/menu.png"></img>
+    <button id="test" class="menu-items start-button">CLICK TO START TEST GAME</button>
+    <button id="level_one" class="menu-items start-button">CLICK TO START LEVEL 1 GAME</button>
   </div>
+
 
   <canvas id="game"
           class="game-canvas"
@@ -31,6 +32,18 @@
     </div>
     <div class="score-container">
       <span class="score" id="red-score"></span>
+    </div>
+  </div>
+
+
+  <div id="total-score-container">
+    <div class="total-score">
+      <span class="total-label">Blue:</span>
+      <span class="total" id="blue-total"></span>
+    </div>
+    <div class="total-score">
+      <span class="total-label">Red:</span>
+      <span class="total" id="red-total"></span>
     </div>
   </div>
 
