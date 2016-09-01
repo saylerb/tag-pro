@@ -9,7 +9,7 @@ import Spike from '../lib/spike'
 describe('SpikeCollisions', function() {
   context('when a player hits a spike', function() {
 
-    var players = [new Player({ x: 300, y: 300, color: 'red' })]
+    var players = [new Player(null, { x: 300, y: 300, color: 'red' })]
     var flags = [new Flag({ x: 50, y: 50, color: 'blue' })]
     var spikes = [new Spike({ x: 150, y: 150, tsize: 40 })]
 
