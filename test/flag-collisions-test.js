@@ -24,8 +24,8 @@ describe('FlagCollisions', function() {
   var map = new Map(blueprint)
 
   let players = []
-  players.push(new Player({ x: 135, y: 150, color: 'red', controls: 'arrows' }, map))
-  players.push(new Player({ x: 170, y: 150, color: 'blue', controls: 'wasd' }, map))
+  players.push(new Player({ x: 290, y: 290, color: 'red', controls: 'arrows' }, map))
+  players.push(new Player({ x: 110, y: 110, color: 'blue', controls: 'wasd' }, map))
 
   let flags = []
  
@@ -52,16 +52,16 @@ describe('FlagCollisions', function() {
       let bluePlayers = flagCollisions.bluePlayers
       assert.isArray(bluePlayers)
       assert.equal(bluePlayers.length, 1)
-      assert.equal(bluePlayers[0].x, 170)
-      assert.equal(bluePlayers[0].y, 150)
+      assert.equal(bluePlayers[0].x, 110)
+      assert.equal(bluePlayers[0].y, 110)
     })
 
     it('flag collision detector can get red players', function() {
       let redPlayers = flagCollisions.redPlayers
       assert.isArray(redPlayers)
       assert.equal(redPlayers.length, 1)
-      assert.equal(redPlayers[0].x, 135)
-      assert.equal(redPlayers[0].y, 150)
+      assert.equal(redPlayers[0].x, 290)
+      assert.equal(redPlayers[0].y, 290)
     })
   })
 
