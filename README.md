@@ -16,7 +16,7 @@ We chose to replicate an existing game called [TagPro](http://tagpro-sphere.koal
 
 Our game is limited to two players. The Red team uses the arrow keys to move, and the Blue team uses WASD keys to move. There is a time limit for game play. At the end of the time limit, the score is assessed and a team wins (or there is a tie). The home screen features a browser-persistent tally of how many games each team has one (using localStorage).
 
-[LINK TO GAME](https://saylerb.github.io/game-time/)
+[Link to Production Application](https://saylerb.github.io/game-time/)
 
 ## Repo Setup
 
