@@ -1,7 +1,8 @@
 body {
- background-image: url("http://wallpapercave.com/wp/NcdPGXX.jpg");
- background-repeat: no-repeat;
- background-size: cover;
+  font-family: sans-serif;
+  background-image: url("http://wallpapercave.com/wp/NcdPGXX.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .game-canvas {
@@ -32,8 +33,8 @@ body {
 }
 
 .menu-items {
- display:block;
- margin: auto;
+  display:block;
+  margin: auto;
 }
 
 .start-menu img {
@@ -49,13 +50,14 @@ h3 {
   color: #DDD;
   font-size: 1.5em;
   text-align: center;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; 
 }
 
 .start-menu {
- float: center;
- margin: auto;
- width: 50%;
- overflow: hidden;
+  float: center;
+  margin: auto;
+  width: 50%;
+  overflow: hidden;
 }
 
 .score-container {
@@ -65,7 +67,7 @@ h3 {
 }
 
 .total-score {
-  width: 200px;
+  width: 250px;
   text-align: center;
   vertical-align: middle;
 }
@@ -84,34 +86,36 @@ h3 {
 }
 
 .total-label {
- font-size: 2em;
- vertical-align: middle;
- padding-left: 25px;
- display: flex;
+  font-size: 1.75em;
+  vertical-align: middle;
+  padding-left: 20px;
+  display: flex;
 }
 
 .start-button {
-	box-shadow: 3px 4px 0px 0px #8a2a21;
-	background:linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
-	background-color:#c62d1f;
-	border-radius:18px;
-	border:1px solid #d02718;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:17px;
-	padding:7px 25px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #810e05;
-    margin-top: 10px;
-    margin-bottom: 10px;
+  box-shadow: 3px 4px 0px 0px #8a2a21;
+  background:linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
+  background-color:#c62d1f;
+  border-radius:18px;
+  border:1px solid #d02718;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+  font-family:Arial;
+  font-size:17px;
+  padding:7px 25px;
+  text-decoration:none;
+  text-shadow:0px 1px 0px #810e05;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
+
 .start-button:hover {
-	background:linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);
-	background-color:#f24437;
+  background:linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);
+  background-color:#f24437;
 }
+
 .start-button:active {
-	position:relative;
-	top:1px;
+  position:relative;
+  top:1px;
 }
