@@ -79,7 +79,7 @@ describe('Player', function() {
       player.dx = 0
       player.dy = 0
 
-      var expectedPos = player.x + (acceleration * drag)
+      expectedPos = player.x + (acceleration * drag)
 
       player.move(keys)
       assert.equal(player.x, expectedPos)
