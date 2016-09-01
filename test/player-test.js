@@ -7,8 +7,6 @@ import Map from '../lib/map'
 describe('Player', function() {
   context('player can be created and moved', function() {
 
-    // not passing flag or player options to map (using defaults)
-
     var map = new Map({ tsize: 10,
                         columns: 2,
                         rows: 2,
@@ -23,7 +21,7 @@ describe('Player', function() {
     var player
 
     beforeEach(function(){
-      player = new Player({ x: 25, y: 25, color: 'blue', controls: 'arrows' }, map)
+      player = new Player(map, { x: 25, y: 25, color: 'blue', controls: 'arrows' })
     })
 
     it('should have specified x and y coordinates', function() {
