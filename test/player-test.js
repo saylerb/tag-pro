@@ -7,8 +7,6 @@ import Map from '../lib/map'
 describe('Player', function() {
   context('player can be created and moved', function() {
 
-    // not passing flag or player options to map (using defaults)
-
     var map = new Map({ tsize: 10,
                         columns: 2,
                         rows: 2,
