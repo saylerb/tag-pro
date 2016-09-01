@@ -50,15 +50,15 @@
 
 	var _game2 = _interopRequireDefault(_game);
 
-	var _keyboard = __webpack_require__(3);
+	var _keyboard = __webpack_require__(9);
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
-	var _map = __webpack_require__(4);
+	var _map = __webpack_require__(10);
 
 	var _map2 = _interopRequireDefault(_map);
 
-	var _mapBlueprint = __webpack_require__(6);
+	var _mapBlueprint = __webpack_require__(11);
 
 	var _mapBlueprint2 = _interopRequireDefault(_mapBlueprint);
 
@@ -72,7 +72,7 @@
 	var context = canvas.getContext('2d');
 
 	var dom = new _dom2.default();
-	var game = {};
+	var game = new _game2.default();
 	var gameCounter = 0;
 	var timeLimit = 3600;
 
@@ -175,27 +175,15 @@
 
 	var _player2 = _interopRequireDefault(_player);
 
-	var _keyboard = __webpack_require__(3);
-
-	var _keyboard2 = _interopRequireDefault(_keyboard);
-
-	var _map = __webpack_require__(4);
-
-	var _map2 = _interopRequireDefault(_map);
-
-	var _flag = __webpack_require__(5);
+	var _flag = __webpack_require__(3);
 
 	var _flag2 = _interopRequireDefault(_flag);
 
-	var _mapBlueprint = __webpack_require__(6);
-
-	var _mapBlueprint2 = _interopRequireDefault(_mapBlueprint);
-
-	var _spike = __webpack_require__(7);
+	var _spike = __webpack_require__(4);
 
 	var _spike2 = _interopRequireDefault(_spike);
 
-	var _collisionDetector = __webpack_require__(8);
+	var _collisionDetector = __webpack_require__(5);
 
 	var _collisionDetector2 = _interopRequireDefault(_collisionDetector);
 
@@ -225,8 +213,8 @@
 	      var self = this;
 	      self.running = true;
 
-	      self.players.push(new _player2.default(self.blueprint.redPlayerOptions, self.map));
-	      self.players.push(new _player2.default(self.blueprint.bluePlayerOptions, self.map));
+	      self.players.push(new _player2.default(self.map, self.blueprint.redPlayerOptions));
+	      self.players.push(new _player2.default(self.map, self.blueprint.bluePlayerOptions));
 
 	      self.flags.push(new _flag2.default(self.blueprint.blueFlagOptions));
 	      self.flags.push(new _flag2.default(self.blueprint.redFlagOptions));
@@ -299,8 +287,8 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Player = function () {
-	  function Player() {
-	    var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  function Player(map) {
+	    var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 	    var _ref$x = _ref.x;
 	    var x = _ref$x === undefined ? 100 : _ref$x;
@@ -314,7 +302,6 @@
 	    var controls = _ref$controls === undefined ? 'arrows' : _ref$controls;
 	    var _ref$acceleration = _ref.acceleration;
 	    var acceleration = _ref$acceleration === undefined ? 0.1 : _ref$acceleration;
-	    var map = arguments[1];
 
 	    _classCallCheck(this, Player);
 
@@ -343,18 +330,18 @@
 	  }, {
 	    key: 'determinePlayerTilePxl',
 	    value: function determinePlayerTilePxl() {
-	      if (this.color == 'blue') {
+	      if (this.color === 'blue') {
 	        return 600;
-	      } else if (this.color == 'red') {
+	      } else if (this.color === 'red') {
 	        return 560;
 	      }
 	    }
 	  }, {
 	    key: 'determineFlagTilePxl',
 	    value: function determineFlagTilePxl() {
-	      if (this.color == 'blue') {
+	      if (this.color === 'blue') {
 	        return 560;
-	      } else if (this.color == 'red') {
+	      } else if (this.color === 'red') {
 	        return 600;
 	      }
 	    }
@@ -374,7 +361,7 @@
 	    value: function accelerate(keys) {
 	      var acceleration = this.acceleration;
 	      if (!this.frozen) {
-	        if (this.controls == 'arrows') {
+	        if (this.controls === 'arrows') {
 	          if (keys.leftArrow) {
 	            this.dx -= acceleration;
 	          }
@@ -445,6 +432,484 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Flag = function () {
+	  function Flag(options) {
+	    _classCallCheck(this, Flag);
+
+	    this.x = options.x;
+	    this.y = options.y;
+	    this.color = options.color;
+	    this.flagImage = this.loadFlagImage();
+	    this.tsize = options.tsize;
+	    this.isCaptured = false;
+	  }
+
+	  _createClass(Flag, [{
+	    key: 'loadFlagImage',
+	    value: function loadFlagImage() {
+	      var flagImg = new Image();
+	      flagImg.src = './lib/assets/tiles.png';
+	      return flagImg;
+	    }
+	  }, {
+	    key: 'determineFlagYTilePxl',
+	    value: function determineFlagYTilePxl() {
+	      if (this.isCaptured) {
+	        return 80;
+	      } else {
+	        return 40;
+	      }
+	    }
+	  }, {
+	    key: 'determineFlagXTilePxl',
+	    value: function determineFlagXTilePxl() {
+	      if (this.color === 'blue') {
+	        return 600;
+	      } else if (this.color === 'red') {
+	        return 560;
+	      }
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw(context) {
+	      context.drawImage(this.flagImage, this.determineFlagXTilePxl(), this.determineFlagYTilePxl(), this.tsize, this.tsize, this.x - this.tsize / 2, this.y - this.tsize / 2, this.tsize, this.tsize);
+	    }
+	  }]);
+
+	  return Flag;
+	}();
+
+	exports.default = Flag;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Spike = function () {
+	  function Spike(options) {
+	    _classCallCheck(this, Spike);
+
+	    this.x = options.x;
+	    this.y = options.y;
+	    this.originY = options.y;
+	    this.tsize = options.tsize;
+	    this.moving = options.moving || false;
+	    this.amplitude = options.amplitude || 40;
+	  }
+
+	  _createClass(Spike, [{
+	    key: 'move',
+	    value: function move(game_counter) {
+	      if (this.moving) {
+	        this.y = this.originY + this.amplitude * Math.sin((game_counter + this.x % 360) * (Math.PI / 180));
+	      }
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw(context) {
+	      context.drawImage(this.spriteSheet, this.SpikeXTilePxl, this.SpikeYTilePxl, this.tsize, this.tsize, this.x - this.tsize / 2, this.y - this.tsize / 2, this.tsize, this.tsize);
+	    }
+	  }, {
+	    key: 'spriteSheet',
+	    get: function get() {
+	      var spikeImg = new Image();
+	      spikeImg.src = './lib/assets/tiles.png';
+	      return spikeImg;
+	    }
+	  }, {
+	    key: 'SpikeYTilePxl',
+	    get: function get() {
+	      return 0;
+	    }
+	  }, {
+	    key: 'SpikeXTilePxl',
+	    get: function get() {
+	      return 480;
+	    }
+	  }]);
+
+	  return Spike;
+	}();
+
+	exports.default = Spike;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _ballCollisions = __webpack_require__(6);
+
+	var _ballCollisions2 = _interopRequireDefault(_ballCollisions);
+
+	var _flagCollisions = __webpack_require__(7);
+
+	var _flagCollisions2 = _interopRequireDefault(_flagCollisions);
+
+	var _spikeCollisions = __webpack_require__(8);
+
+	var _spikeCollisions2 = _interopRequireDefault(_spikeCollisions);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var CollisionDectector = function () {
+	  function CollisionDectector(players, flags, spikes) {
+	    _classCallCheck(this, CollisionDectector);
+
+	    this.ballCollisions = new _ballCollisions2.default(players, flags);
+	    this.flagCollisions = new _flagCollisions2.default(players, flags);
+	    this.spikeCollisions = new _spikeCollisions2.default(players, flags, spikes);
+	  }
+
+	  _createClass(CollisionDectector, [{
+	    key: 'checkBallCollisions',
+	    value: function checkBallCollisions() {
+	      this.ballCollisions.testCollisions();
+	    }
+	  }, {
+	    key: 'checkSpikeCollisions',
+	    value: function checkSpikeCollisions() {
+	      this.spikeCollisions.testCollisions();
+	    }
+	  }, {
+	    key: 'checkFlagStatuses',
+	    value: function checkFlagStatuses() {
+	      this.flagCollisions.testGrabbed();
+	      this.flagCollisions.testCaptured();
+	    }
+	  }, {
+	    key: 'checkAllCollisions',
+	    value: function checkAllCollisions() {
+	      this.checkBallCollisions();
+	      this.checkSpikeCollisions();
+	      this.checkFlagStatuses();
+	    }
+	  }, {
+	    key: 'redScore',
+	    get: function get() {
+	      return this.flagCollisions.scoreBoard.red;
+	    }
+	  }, {
+	    key: 'blueScore',
+	    get: function get() {
+	      return this.flagCollisions.scoreBoard.blue;
+	    }
+	  }, {
+	    key: 'scores',
+	    get: function get() {
+	      return { red: this.flagCollisions.scoreBoard.red, blue: this.flagCollisions.scoreBoard.blue };
+	    }
+	  }]);
+
+	  return CollisionDectector;
+	}();
+
+	exports.default = CollisionDectector;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var BallCollisions = function () {
+	  function BallCollisions(players, flags) {
+	    _classCallCheck(this, BallCollisions);
+
+	    this.playerPairs = this.pairwise(players);
+	    this.flags = flags;
+	  }
+
+	  _createClass(BallCollisions, [{
+	    key: 'pairwise',
+	    value: function pairwise(list) {
+	      var pairs = [];
+	      list.slice(0, list.length - 1).forEach(function (first, n) {
+	        var tail = list.slice(n + 1, list.length);
+	        tail.forEach(function (item) {
+	          pairs.push([first, item]);
+	        });
+	      });
+	      return pairs;
+	    }
+	  }, {
+	    key: 'testCollisions',
+	    value: function testCollisions() {
+	      var _this = this;
+
+	      this.playerPairs.forEach(function (pair) {
+	        var ball1 = pair[0];
+	        var ball2 = pair[1];
+
+	        var bdx = ball1.x - ball2.x;
+	        var bdy = ball1.y - ball2.y;
+	        var bdr = ball1.radius + ball2.radius;
+
+	        if (bdx * bdx + bdy * bdy < bdr * bdr) {
+	          var theta = Math.atan2(bdy, bdx);
+	          var force = bdr - Math.sqrt(bdx * bdx + bdy * bdy);
+	          ball1.dx += force * Math.cos(theta);
+	          ball2.dx -= force * Math.cos(theta);
+	          ball1.dy += force * Math.sin(theta);
+	          ball2.dy -= force * Math.sin(theta);
+
+	          _this.returnFlag(ball1, ball2);
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'returnFlag',
+	    value: function returnFlag(ball1, ball2) {
+	      if (ball1.color !== ball2.color) {
+	        if (ball1.hasFlag) {
+	          ball1.hasFlag = false;
+	          var returnedFlag = this.determineFlagToReturn(ball1);
+	          returnedFlag.isCaptured = false;
+	        }
+	        if (ball2.hasFlag) {
+	          ball2.hasFlag = false;
+	          var _returnedFlag = this.determineFlagToReturn(ball2);
+	          _returnedFlag.isCaptured = false;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'determineFlagToReturn',
+	    value: function determineFlagToReturn(ball) {
+	      if (ball.color === 'blue') {
+	        return this.flags[1];
+	      } else {
+	        return this.flags[0];
+	      }
+	    }
+	  }]);
+
+	  return BallCollisions;
+	}();
+
+	exports.default = BallCollisions;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var FlagCollisions = function () {
+	  function FlagCollisions(players, flags) {
+	    _classCallCheck(this, FlagCollisions);
+
+	    this.players = players;
+	    this.blueFlag = flags[0];
+	    this.redFlag = flags[1];
+	    this.touchRadius = 20;
+	    this.scoreBoard = { red: 0, blue: 0 };
+	  }
+
+	  _createClass(FlagCollisions, [{
+	    key: 'testGrabbed',
+	    value: function testGrabbed() {
+	      var _this = this;
+
+	      this.bluePlayers.forEach(function (player) {
+	        var flag = _this.redFlag;
+	        if (!flag.isCaptured && _this.checkWithinRadius(player, flag)) {
+	          player.hasFlag = true;
+	          flag.isCaptured = true;
+	        }
+	      });
+
+	      this.redPlayers.forEach(function (player) {
+	        var flag = _this.blueFlag;
+	        if (!flag.isCaptured && _this.checkWithinRadius(player, flag)) {
+	          player.hasFlag = true;
+	          flag.isCaptured = true;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'testCaptured',
+	    value: function testCaptured() {
+	      var _this2 = this;
+
+	      this.bluePlayers.forEach(function (player) {
+	        if (player.hasFlag) {
+	          var homeFlag = _this2.blueFlag;
+	          var targetFlag = _this2.redFlag;
+	          if (_this2.checkWithinRadius(player, homeFlag)) {
+	            player.hasFlag = false;
+	            targetFlag.isCaptured = false;
+	            _this2.scoreBoard.blue++;
+	          }
+	        }
+	      });
+
+	      this.redPlayers.forEach(function (player) {
+	        if (player.hasFlag) {
+	          var homeFlag = _this2.redFlag;
+	          var targetFlag = _this2.blueFlag;
+	          if (_this2.checkWithinRadius(player, homeFlag)) {
+	            player.hasFlag = false;
+	            targetFlag.isCaptured = false;
+	            _this2.scoreBoard.red++;
+	          }
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'checkWithinRadius',
+	    value: function checkWithinRadius(player, flag) {
+	      if (player.x >= flag.x - this.touchRadius && player.x <= flag.x + this.touchRadius && player.y <= flag.y + this.touchRadius && player.y >= flag.y - this.touchRadius) {
+	        return true;
+	      }
+	    }
+	  }, {
+	    key: 'bluePlayers',
+	    get: function get() {
+	      return this.players.filter(function (player) {
+	        return player.color === 'blue';
+	      });
+	    }
+	  }, {
+	    key: 'redPlayers',
+	    get: function get() {
+	      return this.players.filter(function (player) {
+	        return player.color === 'red';
+	      });
+	    }
+	  }]);
+
+	  return FlagCollisions;
+	}();
+
+	exports.default = FlagCollisions;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var SpikeCollisions = function () {
+	  function SpikeCollisions(players, flags, spikes) {
+	    _classCallCheck(this, SpikeCollisions);
+
+	    this.players = players;
+	    this.flags = flags;
+	    this.spikes = spikes;
+	    this.touchRadius = 30;
+	  }
+
+	  _createClass(SpikeCollisions, [{
+	    key: 'testCollisions',
+	    value: function testCollisions() {
+	      var _this = this;
+
+	      this.players.forEach(function (player) {
+	        _this.spikes.forEach(function (spike) {
+	          if (_this.checkWithinRadius(player, spike)) {
+	            _this.respawnPlayer(player);
+
+	            if (player.hasFlag) {
+	              _this.returnFlag(player);
+	            }
+	          }
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'checkWithinRadius',
+	    value: function checkWithinRadius(player, spike) {
+	      if (player.x >= spike.x - this.touchRadius && player.x <= spike.x + this.touchRadius && player.y <= spike.y + this.touchRadius && player.y >= spike.y - this.touchRadius) {
+	        return true;
+	      }
+	    }
+	  }, {
+	    key: 'respawnPlayer',
+	    value: function respawnPlayer(player) {
+	      player.x = player.spawnPosition.x;
+	      player.y = player.spawnPosition.y;
+	      player.dx = 0;
+	      player.dy = 0;
+	      player.frozen = true;
+	      setTimeout(function () {
+	        player.frozen = false;
+	      }, 2000);
+	    }
+	  }, {
+	    key: 'returnFlag',
+	    value: function returnFlag(player) {
+	      player.hasFlag = false;
+	      if (player.color === 'blue') {
+	        this.flags[1].isCaptured = false;
+	      } else {
+	        this.flags[0].isCaptured = false;
+	      }
+	    }
+	  }]);
+
+	  return SpikeCollisions;
+	}();
+
+	exports.default = SpikeCollisions;
+
+/***/ },
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -562,7 +1027,7 @@
 	exports.default = Keyboard;
 
 /***/ },
-/* 4 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -582,8 +1047,6 @@
 	    this.cols = blueprint.columns, this.rows = blueprint.rows, this.tsize = blueprint.tsize;
 	    this.tiles = blueprint.tiles;
 	    this.barriers = blueprint.barriers;
-	    this.redFlagOptions = blueprint.redFlagOptions;
-	    this.blueFlagOptions = blueprint.blueFlagOptions;
 	    this.tilesImg = this.loadTileImage();
 	  }
 
@@ -604,7 +1067,7 @@
 	    value: function isWallCollision(x, y) {
 	      var tileValue = this.getTileValueAtXY(x, y);
 	      return this.barriers.some(function (barrier) {
-	        return barrier == tileValue;
+	        return barrier === tileValue;
 	      });
 	    }
 	  }, {
@@ -649,70 +1112,7 @@
 	exports.default = Map;
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Flag = function () {
-	  function Flag(options) {
-	    _classCallCheck(this, Flag);
-
-	    this.x = options.x;
-	    this.y = options.y;
-	    this.color = options.color;
-	    this.flagImage = this.loadFlagImage();
-	    this.tsize = options.tsize;
-	    this.isCaptured = false;
-	  }
-
-	  _createClass(Flag, [{
-	    key: 'loadFlagImage',
-	    value: function loadFlagImage() {
-	      var flagImg = new Image();
-	      flagImg.src = './lib/assets/tiles.png';
-	      return flagImg;
-	    }
-	  }, {
-	    key: 'determineFlagYTilePxl',
-	    value: function determineFlagYTilePxl() {
-	      if (this.isCaptured) {
-	        return 80;
-	      } else {
-	        return 40;
-	      }
-	    }
-	  }, {
-	    key: 'determineFlagXTilePxl',
-	    value: function determineFlagXTilePxl() {
-	      if (this.color == 'blue') {
-	        return 600;
-	      } else if (this.color == 'red') {
-	        return 560;
-	      }
-	    }
-	  }, {
-	    key: 'draw',
-	    value: function draw(context) {
-	      context.drawImage(this.flagImage, this.determineFlagXTilePxl(), this.determineFlagYTilePxl(), this.tsize, this.tsize, this.x - this.tsize / 2, this.y - this.tsize / 2, this.tsize, this.tsize);
-	    }
-	  }]);
-
-	  return Flag;
-	}();
-
-	exports.default = Flag;
-
-/***/ },
-/* 6 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -771,423 +1171,6 @@
 	};
 
 	exports.default = MapBlueprint;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Spike = function () {
-	  function Spike(options) {
-	    _classCallCheck(this, Spike);
-
-	    this.x = options.x;
-	    this.y = options.y;
-	    this.originY = options.y;
-	    this.tsize = options.tsize;
-	    this.moving = options.moving || false;
-	    this.amplitude = options.amplitude || 40;
-	  }
-
-	  _createClass(Spike, [{
-	    key: 'move',
-	    value: function move(game_counter) {
-	      if (this.moving) {
-	        this.y = this.originY + this.amplitude * Math.sin((game_counter + this.x % 360) * (Math.PI / 180));
-	      }
-	    }
-	  }, {
-	    key: 'draw',
-	    value: function draw(context) {
-	      context.drawImage(this.spriteSheet, this.SpikeXTilePxl, this.SpikeYTilePxl, this.tsize, this.tsize, this.x - this.tsize / 2, this.y - this.tsize / 2, this.tsize, this.tsize);
-	    }
-	  }, {
-	    key: 'spriteSheet',
-	    get: function get() {
-	      var spikeImg = new Image();
-	      spikeImg.src = './lib/assets/tiles.png';
-	      return spikeImg;
-	    }
-	  }, {
-	    key: 'SpikeYTilePxl',
-	    get: function get() {
-	      return 0;
-	    }
-	  }, {
-	    key: 'SpikeXTilePxl',
-	    get: function get() {
-	      return 480;
-	    }
-	  }]);
-
-	  return Spike;
-	}();
-
-	exports.default = Spike;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _ballCollisions = __webpack_require__(9);
-
-	var _ballCollisions2 = _interopRequireDefault(_ballCollisions);
-
-	var _flagCollisions = __webpack_require__(10);
-
-	var _flagCollisions2 = _interopRequireDefault(_flagCollisions);
-
-	var _spikeCollisions = __webpack_require__(11);
-
-	var _spikeCollisions2 = _interopRequireDefault(_spikeCollisions);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var CollisionDectector = function () {
-	  function CollisionDectector(players, flags, spikes) {
-	    _classCallCheck(this, CollisionDectector);
-
-	    this.ballCollisions = new _ballCollisions2.default(players, flags);
-	    this.flagCollisions = new _flagCollisions2.default(players, flags);
-	    this.spikeCollisions = new _spikeCollisions2.default(players, flags, spikes);
-	  }
-
-	  _createClass(CollisionDectector, [{
-	    key: 'checkBallCollisions',
-	    value: function checkBallCollisions() {
-	      this.ballCollisions.testCollisions();
-	    }
-	  }, {
-	    key: 'checkSpikeCollisions',
-	    value: function checkSpikeCollisions() {
-	      this.spikeCollisions.testCollisions();
-	    }
-	  }, {
-	    key: 'checkFlagStatuses',
-	    value: function checkFlagStatuses() {
-	      this.flagCollisions.testGrabbed();
-	      this.flagCollisions.testCaptured();
-	    }
-	  }, {
-	    key: 'checkAllCollisions',
-	    value: function checkAllCollisions() {
-	      this.checkBallCollisions();
-	      this.checkSpikeCollisions();
-	      this.checkFlagStatuses();
-	    }
-	  }, {
-	    key: 'redScore',
-	    get: function get() {
-	      return this.flagCollisions.scoreBoard.red;
-	    }
-	  }, {
-	    key: 'blueScore',
-	    get: function get() {
-	      return this.flagCollisions.scoreBoard.blue;
-	    }
-	  }, {
-	    key: 'scores',
-	    get: function get() {
-	      return { red: this.flagCollisions.scoreBoard.red, blue: this.flagCollisions.scoreBoard.blue };
-	    }
-	  }]);
-
-	  return CollisionDectector;
-	}();
-
-	exports.default = CollisionDectector;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var BallCollisions = function () {
-	  function BallCollisions(players, flags) {
-	    _classCallCheck(this, BallCollisions);
-
-	    this.playerPairs = this.pairwise(players);
-	    this.flags = flags;
-	  }
-
-	  _createClass(BallCollisions, [{
-	    key: 'pairwise',
-	    value: function pairwise(list) {
-	      var pairs = [];
-	      list.slice(0, list.length - 1).forEach(function (first, n) {
-	        var tail = list.slice(n + 1, list.length);
-	        tail.forEach(function (item) {
-	          pairs.push([first, item]);
-	        });
-	      });
-	      return pairs;
-	    }
-	  }, {
-	    key: 'testCollisions',
-	    value: function testCollisions() {
-	      var _this = this;
-
-	      this.playerPairs.forEach(function (pair) {
-	        var ball1 = pair[0];
-	        var ball2 = pair[1];
-
-	        var bdx = ball1.x - ball2.x;
-	        var bdy = ball1.y - ball2.y;
-	        var bdr = ball1.radius + ball2.radius;
-
-	        if (bdx * bdx + bdy * bdy < bdr * bdr) {
-	          var theta = Math.atan2(bdy, bdx);
-	          var force = bdr - Math.sqrt(bdx * bdx + bdy * bdy);
-	          ball1.dx += force * Math.cos(theta);
-	          ball2.dx -= force * Math.cos(theta);
-	          ball1.dy += force * Math.sin(theta);
-	          ball2.dy -= force * Math.sin(theta);
-
-	          _this.returnFlag(ball1, ball2);
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'returnFlag',
-	    value: function returnFlag(ball1, ball2) {
-	      if (ball1.color !== ball2.color) {
-	        if (ball1.hasFlag) {
-	          ball1.hasFlag = false;
-	          var returnedFlag = this.determineFlagToReturn(ball1);
-	          returnedFlag.isCaptured = false;
-	        }
-	        if (ball2.hasFlag) {
-	          ball2.hasFlag = false;
-	          var _returnedFlag = this.determineFlagToReturn(ball2);
-	          _returnedFlag.isCaptured = false;
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'determineFlagToReturn',
-	    value: function determineFlagToReturn(ball) {
-	      if (ball.color == 'blue') {
-	        return this.flags[1];
-	      } else {
-	        return this.flags[0];
-	      }
-	    }
-	  }]);
-
-	  return BallCollisions;
-	}();
-
-	exports.default = BallCollisions;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var FlagCollisions = function () {
-	  function FlagCollisions(players, flags) {
-	    _classCallCheck(this, FlagCollisions);
-
-	    this.bluePlayers = this.getBluePlayers(players);
-	    this.redPlayers = this.getRedPlayers(players);
-	    this.blueFlag = flags[0];
-	    this.redFlag = flags[1];
-	    this.touchRadius = 20;
-	    this.scoreBoard = { red: 0, blue: 0 };
-	  }
-
-	  _createClass(FlagCollisions, [{
-	    key: 'getBluePlayers',
-	    value: function getBluePlayers(players) {
-	      return players.filter(function (player) {
-	        return player.color == 'blue';
-	      });
-	    }
-	  }, {
-	    key: 'getRedPlayers',
-	    value: function getRedPlayers(players) {
-	      return players.filter(function (player) {
-	        return player.color == 'red';
-	      });
-	    }
-	  }, {
-	    key: 'testGrabbed',
-	    value: function testGrabbed() {
-	      var _this = this;
-
-	      this.bluePlayers.forEach(function (player) {
-	        var flag = _this.redFlag;
-	        if (!flag.isCaptured && _this.checkWithinRadius(player, flag)) {
-	          player.hasFlag = true;
-	          flag.isCaptured = true;
-	        }
-	      });
-
-	      this.redPlayers.forEach(function (player) {
-	        var flag = _this.blueFlag;
-	        if (!flag.isCaptured && _this.checkWithinRadius(player, flag)) {
-	          player.hasFlag = true;
-	          flag.isCaptured = true;
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'testCaptured',
-	    value: function testCaptured() {
-	      var _this2 = this;
-
-	      this.bluePlayers.forEach(function (player) {
-	        if (player.hasFlag) {
-	          var homeFlag = _this2.blueFlag;
-	          var targetFlag = _this2.redFlag;
-	          if (_this2.checkWithinRadius(player, homeFlag)) {
-	            player.hasFlag = false;
-	            targetFlag.isCaptured = false;
-	            _this2.scoreBoard.blue++;
-	          }
-	        }
-	      });
-
-	      this.redPlayers.forEach(function (player) {
-	        if (player.hasFlag) {
-	          var homeFlag = _this2.redFlag;
-	          var targetFlag = _this2.blueFlag;
-	          if (_this2.checkWithinRadius(player, homeFlag)) {
-	            player.hasFlag = false;
-	            targetFlag.isCaptured = false;
-	            _this2.scoreBoard.red++;
-	          }
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'checkWithinRadius',
-	    value: function checkWithinRadius(player, flag) {
-	      if (player.x >= flag.x - this.touchRadius && player.x <= flag.x + this.touchRadius && player.y <= flag.y + this.touchRadius && player.y >= flag.y - this.touchRadius) {
-	        return true;
-	      }
-	    }
-	  }]);
-
-	  return FlagCollisions;
-	}();
-
-	exports.default = FlagCollisions;
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var SpikeCollisions = function () {
-	  function SpikeCollisions(players, flags, spikes) {
-	    _classCallCheck(this, SpikeCollisions);
-
-	    this.players = players;
-	    this.flags = flags;
-	    this.spikes = spikes;
-	    this.touchRadius = 30;
-	  }
-
-	  _createClass(SpikeCollisions, [{
-	    key: 'testCollisions',
-	    value: function testCollisions() {
-	      var _this = this;
-
-	      var radius = this.touchRadius;
-	      this.players.forEach(function (player) {
-	        _this.spikes.forEach(function (spike) {
-	          if (_this.checkWithinRadius(player, spike)) {
-	            _this.respawnPlayer(player);
-
-	            if (player.hasFlag) {
-	              _this.returnFlag(player);
-	            }
-	          }
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'checkWithinRadius',
-	    value: function checkWithinRadius(player, spike) {
-	      if (player.x >= spike.x - this.touchRadius && player.x <= spike.x + this.touchRadius && player.y <= spike.y + this.touchRadius && player.y >= spike.y - this.touchRadius) {
-	        return true;
-	      }
-	    }
-	  }, {
-	    key: 'respawnPlayer',
-	    value: function respawnPlayer(player) {
-	      player.x = player.spawnPosition.x;
-	      player.y = player.spawnPosition.y;
-	      player.dx = 0;
-	      player.dy = 0;
-	      player.frozen = true;
-	      setTimeout(function () {
-	        player.frozen = false;
-	      }, 2000);
-	    }
-	  }, {
-	    key: 'returnFlag',
-	    value: function returnFlag(player) {
-	      player.hasFlag = false;
-	      if (player.color === 'blue') {
-	        this.flags[1].isCaptured = false;
-	      } else {
-	        this.flags[0].isCaptured = false;
-	      }
-	    }
-	  }]);
-
-	  return SpikeCollisions;
-	}();
-
-	exports.default = SpikeCollisions;
 
 /***/ },
 /* 12 */

@@ -47,7 +47,7 @@
 	__webpack_require__(13);
 	mocha.setup("bdd");
 	__webpack_require__(21)
-	__webpack_require__(66);
+	__webpack_require__(70);
 	if(false) {
 		module.hot.accept();
 		module.hot.dispose(function() {
@@ -77,8 +77,8 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Player = function () {
-	  function Player() {
-	    var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  function Player(map) {
+	    var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 	    var _ref$x = _ref.x;
 	    var x = _ref$x === undefined ? 100 : _ref$x;
@@ -92,7 +92,6 @@
 	    var controls = _ref$controls === undefined ? 'arrows' : _ref$controls;
 	    var _ref$acceleration = _ref.acceleration;
 	    var acceleration = _ref$acceleration === undefined ? 0.1 : _ref$acceleration;
-	    var map = arguments[1];
 
 	    _classCallCheck(this, Player);
 
@@ -121,18 +120,18 @@
 	  }, {
 	    key: 'determinePlayerTilePxl',
 	    value: function determinePlayerTilePxl() {
-	      if (this.color == 'blue') {
+	      if (this.color === 'blue') {
 	        return 600;
-	      } else if (this.color == 'red') {
+	      } else if (this.color === 'red') {
 	        return 560;
 	      }
 	    }
 	  }, {
 	    key: 'determineFlagTilePxl',
 	    value: function determineFlagTilePxl() {
-	      if (this.color == 'blue') {
+	      if (this.color === 'blue') {
 	        return 560;
-	      } else if (this.color == 'red') {
+	      } else if (this.color === 'red') {
 	        return 600;
 	      }
 	    }
@@ -152,7 +151,7 @@
 	    value: function accelerate(keys) {
 	      var acceleration = this.acceleration;
 	      if (!this.frozen) {
-	        if (this.controls == 'arrows') {
+	        if (this.controls === 'arrows') {
 	          if (keys.leftArrow) {
 	            this.dx -= acceleration;
 	          }
@@ -223,6 +222,403 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Flag = function () {
+	  function Flag(options) {
+	    _classCallCheck(this, Flag);
+
+	    this.x = options.x;
+	    this.y = options.y;
+	    this.color = options.color;
+	    this.flagImage = this.loadFlagImage();
+	    this.tsize = options.tsize;
+	    this.isCaptured = false;
+	  }
+
+	  _createClass(Flag, [{
+	    key: 'loadFlagImage',
+	    value: function loadFlagImage() {
+	      var flagImg = new Image();
+	      flagImg.src = './lib/assets/tiles.png';
+	      return flagImg;
+	    }
+	  }, {
+	    key: 'determineFlagYTilePxl',
+	    value: function determineFlagYTilePxl() {
+	      if (this.isCaptured) {
+	        return 80;
+	      } else {
+	        return 40;
+	      }
+	    }
+	  }, {
+	    key: 'determineFlagXTilePxl',
+	    value: function determineFlagXTilePxl() {
+	      if (this.color === 'blue') {
+	        return 600;
+	      } else if (this.color === 'red') {
+	        return 560;
+	      }
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw(context) {
+	      context.drawImage(this.flagImage, this.determineFlagXTilePxl(), this.determineFlagYTilePxl(), this.tsize, this.tsize, this.x - this.tsize / 2, this.y - this.tsize / 2, this.tsize, this.tsize);
+	    }
+	  }]);
+
+	  return Flag;
+	}();
+
+	exports.default = Flag;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Spike = function () {
+	  function Spike(options) {
+	    _classCallCheck(this, Spike);
+
+	    this.x = options.x;
+	    this.y = options.y;
+	    this.originY = options.y;
+	    this.tsize = options.tsize;
+	    this.moving = options.moving || false;
+	    this.amplitude = options.amplitude || 40;
+	  }
+
+	  _createClass(Spike, [{
+	    key: 'move',
+	    value: function move(game_counter) {
+	      if (this.moving) {
+	        this.y = this.originY + this.amplitude * Math.sin((game_counter + this.x % 360) * (Math.PI / 180));
+	      }
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw(context) {
+	      context.drawImage(this.spriteSheet, this.SpikeXTilePxl, this.SpikeYTilePxl, this.tsize, this.tsize, this.x - this.tsize / 2, this.y - this.tsize / 2, this.tsize, this.tsize);
+	    }
+	  }, {
+	    key: 'spriteSheet',
+	    get: function get() {
+	      var spikeImg = new Image();
+	      spikeImg.src = './lib/assets/tiles.png';
+	      return spikeImg;
+	    }
+	  }, {
+	    key: 'SpikeYTilePxl',
+	    get: function get() {
+	      return 0;
+	    }
+	  }, {
+	    key: 'SpikeXTilePxl',
+	    get: function get() {
+	      return 480;
+	    }
+	  }]);
+
+	  return Spike;
+	}();
+
+	exports.default = Spike;
+
+/***/ },
+/* 5 */,
+/* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var BallCollisions = function () {
+	  function BallCollisions(players, flags) {
+	    _classCallCheck(this, BallCollisions);
+
+	    this.playerPairs = this.pairwise(players);
+	    this.flags = flags;
+	  }
+
+	  _createClass(BallCollisions, [{
+	    key: 'pairwise',
+	    value: function pairwise(list) {
+	      var pairs = [];
+	      list.slice(0, list.length - 1).forEach(function (first, n) {
+	        var tail = list.slice(n + 1, list.length);
+	        tail.forEach(function (item) {
+	          pairs.push([first, item]);
+	        });
+	      });
+	      return pairs;
+	    }
+	  }, {
+	    key: 'testCollisions',
+	    value: function testCollisions() {
+	      var _this = this;
+
+	      this.playerPairs.forEach(function (pair) {
+	        var ball1 = pair[0];
+	        var ball2 = pair[1];
+
+	        var bdx = ball1.x - ball2.x;
+	        var bdy = ball1.y - ball2.y;
+	        var bdr = ball1.radius + ball2.radius;
+
+	        if (bdx * bdx + bdy * bdy < bdr * bdr) {
+	          var theta = Math.atan2(bdy, bdx);
+	          var force = bdr - Math.sqrt(bdx * bdx + bdy * bdy);
+	          ball1.dx += force * Math.cos(theta);
+	          ball2.dx -= force * Math.cos(theta);
+	          ball1.dy += force * Math.sin(theta);
+	          ball2.dy -= force * Math.sin(theta);
+
+	          _this.returnFlag(ball1, ball2);
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'returnFlag',
+	    value: function returnFlag(ball1, ball2) {
+	      if (ball1.color !== ball2.color) {
+	        if (ball1.hasFlag) {
+	          ball1.hasFlag = false;
+	          var returnedFlag = this.determineFlagToReturn(ball1);
+	          returnedFlag.isCaptured = false;
+	        }
+	        if (ball2.hasFlag) {
+	          ball2.hasFlag = false;
+	          var _returnedFlag = this.determineFlagToReturn(ball2);
+	          _returnedFlag.isCaptured = false;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'determineFlagToReturn',
+	    value: function determineFlagToReturn(ball) {
+	      if (ball.color === 'blue') {
+	        return this.flags[1];
+	      } else {
+	        return this.flags[0];
+	      }
+	    }
+	  }]);
+
+	  return BallCollisions;
+	}();
+
+	exports.default = BallCollisions;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var FlagCollisions = function () {
+	  function FlagCollisions(players, flags) {
+	    _classCallCheck(this, FlagCollisions);
+
+	    this.players = players;
+	    this.blueFlag = flags[0];
+	    this.redFlag = flags[1];
+	    this.touchRadius = 20;
+	    this.scoreBoard = { red: 0, blue: 0 };
+	  }
+
+	  _createClass(FlagCollisions, [{
+	    key: 'testGrabbed',
+	    value: function testGrabbed() {
+	      var _this = this;
+
+	      this.bluePlayers.forEach(function (player) {
+	        var flag = _this.redFlag;
+	        if (!flag.isCaptured && _this.checkWithinRadius(player, flag)) {
+	          player.hasFlag = true;
+	          flag.isCaptured = true;
+	        }
+	      });
+
+	      this.redPlayers.forEach(function (player) {
+	        var flag = _this.blueFlag;
+	        if (!flag.isCaptured && _this.checkWithinRadius(player, flag)) {
+	          player.hasFlag = true;
+	          flag.isCaptured = true;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'testCaptured',
+	    value: function testCaptured() {
+	      var _this2 = this;
+
+	      this.bluePlayers.forEach(function (player) {
+	        if (player.hasFlag) {
+	          var homeFlag = _this2.blueFlag;
+	          var targetFlag = _this2.redFlag;
+	          if (_this2.checkWithinRadius(player, homeFlag)) {
+	            player.hasFlag = false;
+	            targetFlag.isCaptured = false;
+	            _this2.scoreBoard.blue++;
+	          }
+	        }
+	      });
+
+	      this.redPlayers.forEach(function (player) {
+	        if (player.hasFlag) {
+	          var homeFlag = _this2.redFlag;
+	          var targetFlag = _this2.blueFlag;
+	          if (_this2.checkWithinRadius(player, homeFlag)) {
+	            player.hasFlag = false;
+	            targetFlag.isCaptured = false;
+	            _this2.scoreBoard.red++;
+	          }
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'checkWithinRadius',
+	    value: function checkWithinRadius(player, flag) {
+	      if (player.x >= flag.x - this.touchRadius && player.x <= flag.x + this.touchRadius && player.y <= flag.y + this.touchRadius && player.y >= flag.y - this.touchRadius) {
+	        return true;
+	      }
+	    }
+	  }, {
+	    key: 'bluePlayers',
+	    get: function get() {
+	      return this.players.filter(function (player) {
+	        return player.color === 'blue';
+	      });
+	    }
+	  }, {
+	    key: 'redPlayers',
+	    get: function get() {
+	      return this.players.filter(function (player) {
+	        return player.color === 'red';
+	      });
+	    }
+	  }]);
+
+	  return FlagCollisions;
+	}();
+
+	exports.default = FlagCollisions;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var SpikeCollisions = function () {
+	  function SpikeCollisions(players, flags, spikes) {
+	    _classCallCheck(this, SpikeCollisions);
+
+	    this.players = players;
+	    this.flags = flags;
+	    this.spikes = spikes;
+	    this.touchRadius = 30;
+	  }
+
+	  _createClass(SpikeCollisions, [{
+	    key: 'testCollisions',
+	    value: function testCollisions() {
+	      var _this = this;
+
+	      this.players.forEach(function (player) {
+	        _this.spikes.forEach(function (spike) {
+	          if (_this.checkWithinRadius(player, spike)) {
+	            _this.respawnPlayer(player);
+
+	            if (player.hasFlag) {
+	              _this.returnFlag(player);
+	            }
+	          }
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'checkWithinRadius',
+	    value: function checkWithinRadius(player, spike) {
+	      if (player.x >= spike.x - this.touchRadius && player.x <= spike.x + this.touchRadius && player.y <= spike.y + this.touchRadius && player.y >= spike.y - this.touchRadius) {
+	        return true;
+	      }
+	    }
+	  }, {
+	    key: 'respawnPlayer',
+	    value: function respawnPlayer(player) {
+	      player.x = player.spawnPosition.x;
+	      player.y = player.spawnPosition.y;
+	      player.dx = 0;
+	      player.dy = 0;
+	      player.frozen = true;
+	      setTimeout(function () {
+	        player.frozen = false;
+	      }, 2000);
+	    }
+	  }, {
+	    key: 'returnFlag',
+	    value: function returnFlag(player) {
+	      player.hasFlag = false;
+	      if (player.color === 'blue') {
+	        this.flags[1].isCaptured = false;
+	      } else {
+	        this.flags[0].isCaptured = false;
+	      }
+	    }
+	  }]);
+
+	  return SpikeCollisions;
+	}();
+
+	exports.default = SpikeCollisions;
+
+/***/ },
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -340,7 +736,7 @@
 	exports.default = Keyboard;
 
 /***/ },
-/* 4 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -360,8 +756,6 @@
 	    this.cols = blueprint.columns, this.rows = blueprint.rows, this.tsize = blueprint.tsize;
 	    this.tiles = blueprint.tiles;
 	    this.barriers = blueprint.barriers;
-	    this.redFlagOptions = blueprint.redFlagOptions;
-	    this.blueFlagOptions = blueprint.blueFlagOptions;
 	    this.tilesImg = this.loadTileImage();
 	  }
 
@@ -382,7 +776,7 @@
 	    value: function isWallCollision(x, y) {
 	      var tileValue = this.getTileValueAtXY(x, y);
 	      return this.barriers.some(function (barrier) {
-	        return barrier == tileValue;
+	        return barrier === tileValue;
 	      });
 	    }
 	  }, {
@@ -427,7 +821,7 @@
 	exports.default = Map;
 
 /***/ },
-/* 5 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -436,156 +830,58 @@
 	  value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Flag = function () {
-	  function Flag(options) {
-	    _classCallCheck(this, Flag);
+	var MapBlueprint = function MapBlueprint() {
+	  _classCallCheck(this, MapBlueprint);
 
-	    this.x = options.x;
-	    this.y = options.y;
-	    this.color = options.color;
-	    this.flagImage = this.loadFlagImage();
-	    this.tsize = options.tsize;
-	    this.isCaptured = false;
-	  }
+	  this.tsize = 40;
+	  this.barriers = [92, 53, 164, 56, 81, 168, 165, 1];
 
-	  _createClass(Flag, [{
-	    key: 'loadFlagImage',
-	    value: function loadFlagImage() {
-	      var flagImg = new Image();
-	      flagImg.src = './lib/assets/tiles.png';
-	      return flagImg;
-	    }
-	  }, {
-	    key: 'determineFlagYTilePxl',
-	    value: function determineFlagYTilePxl() {
-	      if (this.isCaptured) {
-	        return 80;
-	      } else {
-	        return 40;
-	      }
-	    }
-	  }, {
-	    key: 'determineFlagXTilePxl',
-	    value: function determineFlagXTilePxl() {
-	      if (this.color == 'blue') {
-	        return 600;
-	      } else if (this.color == 'red') {
-	        return 560;
-	      }
-	    }
-	  }, {
-	    key: 'draw',
-	    value: function draw(context) {
-	      context.drawImage(this.flagImage, this.determineFlagXTilePxl(), this.determineFlagYTilePxl(), this.tsize, this.tsize, this.x - this.tsize / 2, this.y - this.tsize / 2, this.tsize, this.tsize);
-	    }
-	  }]);
+	  this.level_one = {
+	    tsize: this.tsize,
+	    tiles: [53, 164, 164, 164, 164, 164, 164, 164, 164, 56, 81, 78, 78, 78, 78, 78, 78, 78, 78, 92, 81, 78, 78, 78, 78, 78, 78, 78, 78, 92, 81, 78, 78, 78, 78, 78, 78, 78, 78, 92, 81, 78, 78, 78, 1, 78, 78, 78, 78, 92, 81, 78, 78, 78, 78, 1, 78, 78, 78, 92, 81, 78, 78, 78, 78, 78, 78, 78, 78, 92, 81, 78, 78, 78, 78, 78, 78, 78, 78, 92, 81, 78, 78, 78, 78, 78, 78, 78, 78, 92, 168, 164, 164, 164, 164, 164, 164, 164, 164, 165],
+	    barriers: this.barriers,
+	    columns: 10,
+	    rows: 10,
+	    blueFlagOptions: { color: 'blue', x: 75, y: 75, tsize: this.tsize },
+	    redFlagOptions: { color: 'red', x: 325, y: 325, tsize: this.tsize },
+	    bluePlayerOptions: { x: 110, y: 110, color: 'blue',
+	      controls: 'wasd', acceleration: 0.1 },
+	    redPlayerOptions: { x: 290, y: 290, color: 'red',
+	      controls: 'arrows', acceleration: 0.1 }
+	  };
 
-	  return Flag;
-	}();
+	  this.level_two = {
+	    tsize: this.tsize,
+	    tiles: [53, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 56, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 168, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 165],
+	    spikes: [{ x: 140, y: 140, tsize: this.tsize }, { x: 140, y: 500, tsize: this.tsize }, { x: 420, y: 140, tsize: this.tsize }, { x: 420, y: 500, tsize: this.tsize }, { x: 580, y: 140, tsize: this.tsize }, { x: 580, y: 500, tsize: this.tsize }, { x: 860, y: 140, tsize: this.tsize }, { x: 860, y: 500, tsize: this.tsize }],
+	    barriers: this.barriers,
+	    columns: 25,
+	    rows: 16,
+	    blueFlagOptions: { color: 'blue', x: 170, y: 320, tsize: this.tsize },
+	    redFlagOptions: { color: 'red', x: 830, y: 320, tsize: this.tsize },
+	    bluePlayerOptions: { x: 110, y: 320, color: 'blue', controls: 'wasd' },
+	    redPlayerOptions: { x: 890, y: 320, color: 'red', controls: 'arrows' }
+	  };
 
-	exports.default = Flag;
+	  this.level_three = {
+	    tsize: this.tsize,
+	    tiles: [53, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 56, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 1, 1, 1, 78, 78, 78, 1, 78, 78, 78, 1, 1, 1, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 1, 1, 1, 78, 78, 78, 1, 78, 78, 78, 1, 1, 1, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 1, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 81, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 81, 168, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 164, 165],
+	    spikes: [{ x: 140, y: 140, tsize: this.tsize, moving: true, amplitude: 20 }, { x: 140, y: 500, tsize: this.tsize, moving: true, amplitude: 20 }, { x: 420, y: 140, tsize: this.tsize, moving: true }, { x: 420, y: 500, tsize: this.tsize, moving: true }, { x: 580, y: 140, tsize: this.tsize, moving: true }, { x: 580, y: 500, tsize: this.tsize, moving: true }, { x: 860, y: 140, tsize: this.tsize, moving: true, amplitude: 20 }, { x: 860, y: 500, tsize: this.tsize, moving: true, amplitude: 20 }],
+	    barriers: this.barriers,
+	    columns: 25,
+	    rows: 16,
+	    blueFlagOptions: { color: 'blue', x: 170, y: 320, tsize: this.tsize },
+	    redFlagOptions: { color: 'red', x: 830, y: 320, tsize: this.tsize },
+	    bluePlayerOptions: { x: 110, y: 320, color: 'blue', controls: 'wasd' },
+	    redPlayerOptions: { x: 890, y: 320, color: 'red', controls: 'arrows' }
+	  };
+	};
 
-/***/ },
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var BallCollisions = function () {
-	  function BallCollisions(players, flags) {
-	    _classCallCheck(this, BallCollisions);
-
-	    this.playerPairs = this.pairwise(players);
-	    this.flags = flags;
-	  }
-
-	  _createClass(BallCollisions, [{
-	    key: 'pairwise',
-	    value: function pairwise(list) {
-	      var pairs = [];
-	      list.slice(0, list.length - 1).forEach(function (first, n) {
-	        var tail = list.slice(n + 1, list.length);
-	        tail.forEach(function (item) {
-	          pairs.push([first, item]);
-	        });
-	      });
-	      return pairs;
-	    }
-	  }, {
-	    key: 'testCollisions',
-	    value: function testCollisions() {
-	      var _this = this;
-
-	      this.playerPairs.forEach(function (pair) {
-	        var ball1 = pair[0];
-	        var ball2 = pair[1];
-
-	        var bdx = ball1.x - ball2.x;
-	        var bdy = ball1.y - ball2.y;
-	        var bdr = ball1.radius + ball2.radius;
-
-	        if (bdx * bdx + bdy * bdy < bdr * bdr) {
-	          var theta = Math.atan2(bdy, bdx);
-	          var force = bdr - Math.sqrt(bdx * bdx + bdy * bdy);
-	          ball1.dx += force * Math.cos(theta);
-	          ball2.dx -= force * Math.cos(theta);
-	          ball1.dy += force * Math.sin(theta);
-	          ball2.dy -= force * Math.sin(theta);
-
-	          _this.returnFlag(ball1, ball2);
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'returnFlag',
-	    value: function returnFlag(ball1, ball2) {
-	      if (ball1.color !== ball2.color) {
-	        if (ball1.hasFlag) {
-	          ball1.hasFlag = false;
-	          var returnedFlag = this.determineFlagToReturn(ball1);
-	          returnedFlag.isCaptured = false;
-	        }
-	        if (ball2.hasFlag) {
-	          ball2.hasFlag = false;
-	          var _returnedFlag = this.determineFlagToReturn(ball2);
-	          _returnedFlag.isCaptured = false;
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'determineFlagToReturn',
-	    value: function determineFlagToReturn(ball) {
-	      if (ball.color == 'blue') {
-	        return this.flags[1];
-	      } else {
-	        return this.flags[0];
-	      }
-	    }
-	  }]);
-
-	  return BallCollisions;
-	}();
-
-	exports.default = BallCollisions;
+	exports.default = MapBlueprint;
 
 /***/ },
-/* 10 */,
-/* 11 */,
 /* 12 */,
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
@@ -610,8 +906,8 @@
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
-		module.hot.accept("!!/Users/saylerb/Dropbox/Documents/programming/turing/4module/game-time/node_modules/mocha-loader/node_modules/css-loader/index.js!/Users/saylerb/Dropbox/Documents/programming/turing/4module/game-time/node_modules/mocha/mocha.css", function() {
-			var newContent = require("!!/Users/saylerb/Dropbox/Documents/programming/turing/4module/game-time/node_modules/mocha-loader/node_modules/css-loader/index.js!/Users/saylerb/Dropbox/Documents/programming/turing/4module/game-time/node_modules/mocha/mocha.css");
+		module.hot.accept("!!/Users/robbie/turing/4module/projects/game-time/node_modules/mocha-loader/node_modules/css-loader/index.js!/Users/robbie/turing/4module/projects/game-time/node_modules/mocha/mocha.css", function() {
+			var newContent = require("!!/Users/robbie/turing/4module/projects/game-time/node_modules/mocha-loader/node_modules/css-loader/index.js!/Users/robbie/turing/4module/projects/game-time/node_modules/mocha/mocha.css");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -880,6 +1176,10 @@
 	__webpack_require__(63);
 	__webpack_require__(64);
 	__webpack_require__(65);
+	__webpack_require__(66);
+	__webpack_require__(67);
+	__webpack_require__(68);
+	__webpack_require__(69);
 
 /***/ },
 /* 22 */
@@ -887,7 +1187,7 @@
 
 	'use strict';
 
-	var _map = __webpack_require__(4);
+	var _map = __webpack_require__(10);
 
 	var _map2 = _interopRequireDefault(_map);
 
@@ -9241,7 +9541,7 @@
 
 	'use strict';
 
-	var _keyboard = __webpack_require__(3);
+	var _keyboard = __webpack_require__(9);
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
@@ -9282,7 +9582,7 @@
 
 	var _player2 = _interopRequireDefault(_player);
 
-	var _map = __webpack_require__(4);
+	var _map = __webpack_require__(10);
 
 	var _map2 = _interopRequireDefault(_map);
 
@@ -9293,8 +9593,6 @@
 
 	describe('Player', function () {
 	  context('player can be created and moved', function () {
-
-	    // not passing flag or player options to map (using defaults)
 
 	    var map = new _map2.default({ tsize: 10,
 	      columns: 2,
@@ -9309,7 +9607,7 @@
 	    var player;
 
 	    beforeEach(function () {
-	      player = new _player2.default({ x: 25, y: 25, color: 'blue', controls: 'arrows' }, map);
+	      player = new _player2.default(map, { x: 25, y: 25, color: 'blue', controls: 'arrows' });
 	    });
 
 	    it('should have specified x and y coordinates', function () {
@@ -9367,7 +9665,7 @@
 	      player.dx = 0;
 	      player.dy = 0;
 
-	      var expectedPos = player.x + acceleration * drag;
+	      expectedPos = player.x + acceleration * drag;
 
 	      player.move(keys);
 	      assert.equal(player.x, expectedPos);
@@ -9381,7 +9679,7 @@
 
 	'use strict';
 
-	var _ballCollisions = __webpack_require__(9);
+	var _ballCollisions = __webpack_require__(6);
 
 	var _ballCollisions2 = _interopRequireDefault(_ballCollisions);
 
@@ -9389,17 +9687,13 @@
 
 	var _player2 = _interopRequireDefault(_player);
 
-	var _flag = __webpack_require__(5);
-
-	var _flag2 = _interopRequireDefault(_flag);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var chai = __webpack_require__(23);
 	var assert = chai.assert;
 
 	describe('BallCollisions', function () {
-	  context('can produce unqiue pairs of players', function () {
+	  context('can produce unique pairs of players', function () {
 	    var players = ["a", "b", "c"];
 	    var flags = [];
 	    var ballCollisions = new _ballCollisions2.default(players, flags);
@@ -9417,8 +9711,9 @@
 	    var flags = [];
 	    var map = {};
 
-	    var player1 = new _player2.default({ x: 135, y: 150, color: 'red', controls: 'arrows' }, map);
-	    var player2 = new _player2.default({ x: 170, y: 150, color: 'blue', controls: 'wasd' }, map);
+	    var player1 = new _player2.default(map, { x: 135, y: 150, color: 'red', controls: 'arrows' });
+	    var player2 = new _player2.default(map, { x: 170, y: 150, color: 'blue', controls: 'wasd' });
+
 	    players.push(player1);
 	    players.push(player2);
 
@@ -9437,6 +9732,354 @@
 /* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	var _flagCollisions = __webpack_require__(7);
+
+	var _flagCollisions2 = _interopRequireDefault(_flagCollisions);
+
+	var _player = __webpack_require__(2);
+
+	var _player2 = _interopRequireDefault(_player);
+
+	var _flag = __webpack_require__(3);
+
+	var _flag2 = _interopRequireDefault(_flag);
+
+	var _map = __webpack_require__(10);
+
+	var _map2 = _interopRequireDefault(_map);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var chai = __webpack_require__(23);
+	var assert = chai.assert;
+
+	describe('FlagCollisions', function () {
+
+	  var blueprint = { tsize: 40, columns: 8, rows: 8,
+	    tiles: [53, 164, 164, 164, 164, 164, 164, 56, 81, 78, 78, 78, 78, 78, 78, 92, 81, 78, 78, 78, 78, 78, 78, 92, 81, 78, 78, 78, 78, 78, 78, 92, 81, 78, 78, 78, 78, 78, 78, 92, 81, 78, 78, 78, 78, 1, 78, 92, 81, 78, 78, 78, 78, 78, 78, 92, 168, 164, 164, 164, 164, 164, 164, 165],
+	    barriers: [92, 53, 164, 56, 81, 168, 165, 1]
+	  };
+
+	  var map = new _map2.default(blueprint);
+
+	  var players = [];
+	  players.push(new _player2.default(map, { x: 290, y: 290, color: 'red', controls: 'arrows' }));
+	  players.push(new _player2.default(map, { x: 110, y: 110, color: 'blue', controls: 'wasd' }));
+
+	  var flags = [];
+
+	  flags.push(new _flag2.default({ x: 150, y: 150, color: 'blue', tsize: 40 }));
+	  flags.push(new _flag2.default({ x: 250, y: 250, color: 'red', tsize: 40 }));
+
+	  var flagCollisions = new _flagCollisions2.default(players, flags);
+
+	  describe('is setup correctly', function () {
+
+	    it('setup players', function () {
+	      assert.equal(players.length, 2);
+	      assert.equal(players[0].color, 'red');
+	      assert.equal(players[1].color, 'blue');
+	    });
+
+	    it('setup flags', function () {
+	      assert.equal(flags.length, 2);
+	      assert.equal(flags[0].color, 'blue');
+	      assert.equal(flags[1].color, 'red');
+	    });
+
+	    it('flag collision detector can get blue players', function () {
+	      var bluePlayers = flagCollisions.bluePlayers;
+	      assert.isArray(bluePlayers);
+	      assert.equal(bluePlayers.length, 1);
+	      assert.equal(bluePlayers[0].x, 110);
+	      assert.equal(bluePlayers[0].y, 110);
+	    });
+
+	    it('flag collision detector can get red players', function () {
+	      var redPlayers = flagCollisions.redPlayers;
+	      assert.isArray(redPlayers);
+	      assert.equal(redPlayers.length, 1);
+	      assert.equal(redPlayers[0].x, 290);
+	      assert.equal(redPlayers[0].y, 290);
+	    });
+	  });
+
+	  describe('can detect if a flag is grabbed', function () {
+
+	    var bluePlayer = flagCollisions.bluePlayers[0];
+	    var redPlayer = flagCollisions.redPlayers[0];
+
+	    context('blue player', function () {
+
+	      it('can detect that blue player does not have flag', function () {
+	        flagCollisions.testGrabbed();
+
+	        assert.equal(bluePlayer.hasFlag, false);
+	        assert.equal(flagCollisions.redFlag.isCaptured, false);
+	        assert.equal(flagCollisions.scoreBoard.red, 0);
+	      });
+
+	      context('blue player captures the red flag', function () {
+
+	        beforeEach(function () {
+	          bluePlayer.x = 250;
+	          bluePlayer.y = 250;
+	        });
+
+	        it('can detect blue player grabbing flag', function () {
+	          flagCollisions.testGrabbed();
+
+	          assert.equal(flagCollisions.redFlag.isCaptured, true);
+	          assert.equal(bluePlayer.hasFlag, true);
+	        });
+
+	        it('can detect blue player capturing flag', function () {
+	          assert.equal(bluePlayer.hasFlag, true);
+
+	          bluePlayer.x = 150;
+	          bluePlayer.y = 150;
+
+	          flagCollisions.testCaptured();
+
+	          assert.equal(bluePlayer.hasFlag, false);
+	          assert.equal(flagCollisions.redFlag.isCaptured, false);
+	          assert.equal(flagCollisions.scoreBoard.blue, 1);
+	        });
+	      });
+	    });
+
+	    context('red player', function () {
+	      it('can detect that red player does not have the flag', function () {
+	        flagCollisions.testGrabbed();
+	        assert.equal(redPlayer.hasFlag, false);
+	        assert.equal(flagCollisions.blueFlag.isCaptured, false);
+	      });
+
+	      context('red player captures the blue flag', function () {
+	        beforeEach(function () {
+	          redPlayer.x = 150;
+	          redPlayer.y = 150;
+	        });
+
+	        it('can detect red player grabbing flag', function () {
+	          flagCollisions.testGrabbed();
+
+	          assert.equal(flagCollisions.blueFlag.isCaptured, true);
+	          assert.equal(redPlayer.hasFlag, true);
+	        });
+
+	        it('can detect red player capturing flag', function () {
+	          assert.equal(redPlayer.hasFlag, true);
+
+	          redPlayer.x = 250;
+	          redPlayer.y = 250;
+
+	          flagCollisions.testCaptured();
+
+	          assert.equal(redPlayer.hasFlag, false);
+	          assert.equal(flagCollisions.blueFlag.isCaptured, false);
+	          assert.equal(flagCollisions.scoreBoard.red, 1);
+	        });
+	      });
+	    });
+	  });
+	});
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _spike = __webpack_require__(4);
+
+	var _spike2 = _interopRequireDefault(_spike);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var chai = __webpack_require__(23);
+	var assert = chai.assert;
+
+	describe('Spike', function () {
+	  context('immobile spike', function () {
+
+	    var spike1 = new _spike2.default({ x: 10,
+	      y: 2,
+	      tsize: 40
+	    });
+
+	    it('should have an x and y coordinate', function () {
+	      assert.equal(spike1.x, 10);
+	      assert.equal(spike1.y, 2);
+	    });
+
+	    it('should not move by default', function () {
+	      assert.equal(spike1.moving, false);
+	    });
+
+	    it('should have x and y tile coordinate', function () {
+	      assert.equal(spike1.SpikeYTilePxl, 0);
+	      assert.equal(spike1.SpikeXTilePxl, 480);
+	    });
+	  });
+
+	  context('moving spike', function () {
+
+	    var spike2 = new _spike2.default({ x: 10,
+	      y: 2,
+	      tsize: 40,
+	      moving: true
+	    });
+
+	    it('should have a default amplitude', function () {
+	      assert.equal(spike2.amplitude, 40);
+	    });
+
+	    it('should move in y direction', function () {
+	      var game_counter = 1;
+	      spike2.move(game_counter);
+	      assert.isAbove(spike2.y, 2);
+
+	      game_counter = 181;
+	      spike2.move(game_counter);
+	      assert.isBelow(spike2.y, 2);
+	    });
+	  });
+	});
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _spikeCollisions = __webpack_require__(8);
+
+	var _spikeCollisions2 = _interopRequireDefault(_spikeCollisions);
+
+	var _player = __webpack_require__(2);
+
+	var _player2 = _interopRequireDefault(_player);
+
+	var _flag = __webpack_require__(3);
+
+	var _flag2 = _interopRequireDefault(_flag);
+
+	var _spike = __webpack_require__(4);
+
+	var _spike2 = _interopRequireDefault(_spike);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var chai = __webpack_require__(23);
+	var assert = chai.assert;
+
+	describe('SpikeCollisions', function () {
+	  context('when a player hits a spike', function () {
+
+	    var players = [new _player2.default(null, { x: 300, y: 300, color: 'red' })];
+	    var flags = [new _flag2.default({ x: 50, y: 50, color: 'blue' })];
+	    var spikes = [new _spike2.default({ x: 150, y: 150, tsize: 40 })];
+
+	    var spikeCollisions = new _spikeCollisions2.default(players, flags, spikes);
+
+	    it('should have a default touch radius', function () {
+	      assert.equal(spikeCollisions.touchRadius, 30);
+	    });
+
+	    it('should know if a player is touching a spike', function () {
+	      players[0].x = 135;
+	      players[0].y = 135;
+
+	      var output = spikeCollisions.checkWithinRadius(players[0], spikes[0]);
+
+	      assert.equal(output, true);
+	    });
+
+	    it('should return a player to their original position after collision', function () {
+	      players[0].x = 305;
+	      players[0].y = 305;
+	      spikeCollisions.testCollisions();
+	      assert.equal(players[0].x, 305);
+
+	      players[0].x = 135;
+	      players[0].y = 135;
+
+	      spikeCollisions.testCollisions();
+	      assert.equal(players[0].x, 300);
+	    });
+
+	    it('should return a flag when player collides with spike', function () {
+	      players[0].hasFlag = true;
+	      flags[0].isCaptured = true;
+
+	      spikeCollisions.returnFlag(players[0]);
+
+	      assert.equal(players[0].hasFlag, false);
+	      assert.equal(flags[0].isCaptured, false);
+	    });
+	  });
+	});
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _mapBlueprint = __webpack_require__(11);
+
+	var _mapBlueprint2 = _interopRequireDefault(_mapBlueprint);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var chai = __webpack_require__(23);
+	var assert = chai.assert;
+
+	describe('MapBlueprint', function () {
+	  context('has structure for map', function () {
+
+	    var blueprints = new _mapBlueprint2.default();
+
+	    it('should have a default tile size for all blueprints', function () {
+	      assert.equal(blueprints.tsize, 40);
+	      assert.equal(blueprints.level_one.tsize, 40);
+	    });
+
+	    it('should have a barriers assigned', function () {
+	      assert.include(blueprints.barriers, 92);
+	      assert.include(blueprints.barriers, 1);
+	      assert.include(blueprints.barriers, 165);
+	      assert.include(blueprints.level_one.barriers, 165);
+	    });
+
+	    it('should have three levels', function () {
+	      assert.isDefined(blueprints.level_one);
+	      assert.isDefined(blueprints.level_two);
+	      assert.isDefined(blueprints.level_three);
+	    });
+
+	    it('should have rows and columns', function () {
+	      assert.equal(blueprints.level_two.columns, 25);
+	      assert.equal(blueprints.level_two.rows, 16);
+	    });
+
+	    it('should have tiles', function () {
+	      assert.isArray(blueprints.level_two.tiles);
+	    });
+
+	    it('can have spikes, and they can be set to move', function () {
+	      assert.isArray(blueprints.level_two.spikes);
+	    });
+	  });
+	});
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {process.nextTick(function() {
 		delete __webpack_require__.c[module.id];
 		if(typeof window !== "undefined" && window.mochaPhantomJS)
@@ -9445,10 +10088,10 @@
 			mocha.run();
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(67)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(71)))
 
 /***/ },
-/* 67 */
+/* 71 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
