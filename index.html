@@ -3,8 +3,50 @@
 <head>
   <meta charset="utf-8">
   <title>Game Time</title>
+  <link href="lib/style.css" rel="stylesheet">
 </head>
 <body>
+
+  <div class="start-menu">
+    <img class="menu-items" src="lib/assets/menu.png"></img>
+    <button id="level_one" class="menu-items start-button">Level 1 - Easy</button>
+    <button id="level_two" class="menu-items start-button">Level 2 - Medium</button>
+    <button id="level_three" class="menu-items start-button">Level 3 - Hard</button>
+  </div>
+
+
+  <canvas id="game"
+          class="game-canvas"
+          width="960px"
+          height="640px">
+  </canvas>
+
+  <canvas id="time-bar"
+          class="game-canvas"
+          width="960px"
+          height="20px">
+  </canvas>
+
+  <div id="score-board-container">
+    <div class="score-container">
+      <span class="score" id="blue-score"></span>
+    </div>
+    <div class="score-container">
+      <span class="score" id="red-score"></span>
+    </div>
+  </div>
+
+
+  <div id="total-score-container">
+    <div class="total-score">
+      <span class="total-label">Blue:</span>
+      <span class="total" id="blue-total"></span>
+    </div>
+    <div class="total-score">
+      <span class="total-label">Red:</span>
+      <span class="total" id="red-total"></span>
+    </div>
+  </div>
 
   <script src="main.bundle.js"></script>
 </body>
