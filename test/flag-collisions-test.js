@@ -103,6 +103,7 @@ describe('FlagCollisions', function() {
           flagCollisions.testCaptured()
 
           assert.equal(bluePlayer.hasFlag, false)
+          assert.equal(flagCollisions.redFlag.isCaptured, false)
           assert.equal(flagCollisions.scoreBoard.blue, 1)
         })
       })
@@ -137,6 +138,7 @@ describe('FlagCollisions', function() {
           flagCollisions.testCaptured()
 
           assert.equal(redPlayer.hasFlag, false)
+          assert.equal(flagCollisions.blueFlag.isCaptured, false)
           assert.equal(flagCollisions.scoreBoard.red, 1)
         })
       })
