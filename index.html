@@ -8,16 +8,23 @@
 <body>
 
   <div class="start-menu">
-    <img src="lib/assets/menu.png"></img>
-    <button id="level_one" class="start-button">Level 1 - Easy</button>
-    <button id="level_two" class="start-button">Level 2 - Medium</button>
-    <button id="level_three" class="start-button">Level 3 - Hard</button>
+    <img class="menu-items" src="lib/assets/menu.png"></img>
+    <button id="level_one" class="menu-items start-button">Level 1 - Easy</button>
+    <button id="level_two" class="menu-items start-button">Level 2 - Medium</button>
+    <button id="level_three" class="menu-items start-button">Level 3 - Hard</button>
   </div>
+
 
   <canvas id="game"
           class="game-canvas"
           width="960px"
           height="640px">
+  </canvas>
+
+  <canvas id="time-bar"
+          class="game-canvas"
+          width="960px"
+          height="20px">
   </canvas>
 
   <div id="score-board-container">
@@ -26,6 +33,18 @@
     </div>
     <div class="score-container">
       <span class="score" id="red-score"></span>
+    </div>
+  </div>
+
+
+  <div id="total-score-container">
+    <div class="total-score">
+      <span class="total-label">Blue:</span>
+      <span class="total" id="blue-total"></span>
+    </div>
+    <div class="total-score">
+      <span class="total-label">Red:</span>
+      <span class="total" id="red-total"></span>
     </div>
   </div>
 
