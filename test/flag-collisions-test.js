@@ -24,8 +24,8 @@ describe('FlagCollisions', function() {
   var map = new Map(blueprint)
 
   let players = []
-  players.push(new Player({ x: 290, y: 290, color: 'red', controls: 'arrows' }, map))
-  players.push(new Player({ x: 110, y: 110, color: 'blue', controls: 'wasd' }, map))
+  players.push(new Player(map, { x: 290, y: 290, color: 'red', controls: 'arrows' }))
+  players.push(new Player(map, { x: 110, y: 110, color: 'blue', controls: 'wasd' }))
 
   let flags = []
  

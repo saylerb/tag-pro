@@ -21,7 +21,7 @@ describe('Player', function() {
     var player
 
     beforeEach(function(){
-      player = new Player({ x: 25, y: 25, color: 'blue', controls: 'arrows' }, map)
+      player = new Player(map, { x: 25, y: 25, color: 'blue', controls: 'arrows' })
     })
 
     it('should have specified x and y coordinates', function() {
@@ -79,7 +79,7 @@ describe('Player', function() {
       player.dx = 0
       player.dy = 0
 
-      var expectedPos = player.x + (acceleration * drag)
+      expectedPos = player.x + (acceleration * drag)
 
       player.move(keys)
       assert.equal(player.x, expectedPos)
