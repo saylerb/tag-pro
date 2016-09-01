@@ -3,10 +3,9 @@ const assert = chai.assert
 
 import BallCollisions from '../lib/ball-collisions'
 import Player from '../lib/player'
-import Flag from '../lib/flag'
 
 describe('BallCollisions', function() {
-  context('can produce unqiue pairs of players', function() {
+  context('can produce unique pairs of players', function() {
     var players = ["a", "b", "c"]
     var flags = []
     var ballCollisions = new BallCollisions(players, flags)
@@ -24,8 +23,9 @@ describe('BallCollisions', function() {
     var flags = []
     var map = {}
 
-    var player1 = new Player({ x: 135, y: 150, color: 'red', controls: 'arrows' }, map)
-    var player2 = new Player({ x: 170, y: 150, color: 'blue', controls: 'wasd' }, map)
+    var player1 = new Player(map, { x: 135, y: 150, color: 'red', controls: 'arrows' })
+    var player2 = new Player(map, { x: 170, y: 150, color: 'blue', controls: 'wasd' })
+
     players.push(player1)
     players.push(player2)
 
