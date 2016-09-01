@@ -1195,7 +1195,7 @@
 	    key: "showMenu",
 	    value: function showMenu() {
 	      document.querySelector('div.start-menu').style.display = 'block';
-	      document.querySelectorAll('button.start-button').forEach(function (button) {
+	      Array.from(document.querySelectorAll('button.start-button')).forEach(function (button) {
 	        return button.style.display = 'block';
 	      });
 	      document.getElementById('total-score-container').style.display = 'flex';
