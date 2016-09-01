@@ -22,7 +22,7 @@ body {
 }
 
 #total-score-container {
-  width: 200px;
+  width: 400px;
   height: 150px;
   border: 2px solid black;
   border-radius: 10px;
@@ -31,11 +31,25 @@ body {
   background-color: white;
 }
 
-.menu-items { 
+.menu-items {
  display:block;
  margin: auto;
 }
 
+.start-menu img {
+  border: 2px solid #FFF;
+}
+
+h3 {
+  font-size: 2em;
+  text-align: center;
+}
+
+.start-menu p {
+  color: #DDD;
+  font-size: 1.5em;
+  text-align: center;
+}
 
 .start-menu {
  float: center;
@@ -44,8 +58,14 @@ body {
  overflow: hidden;
 }
 
-.score-container, .total-score {
+.score-container {
   width: 100px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.total-score {
+  width: 200px;
   text-align: center;
   vertical-align: middle;
 }
@@ -64,7 +84,6 @@ body {
 }
 
 .total-label {
-
  font-size: 2em;
  vertical-align: middle;
  padding-left: 25px;
